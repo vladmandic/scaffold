@@ -1,0 +1,15 @@
+{
+  "name": "Scaffold",
+  "short_name": "Scaffold",
+  "icons": [
+    { "src": "/images/dash-1024.png", "sizes": "1024x1024", "type": "image/png" },
+    { "src": "/images/dash-512.png", "sizes": "1024x1024", "type": "image/png" },
+    { "src": "/images/dash-256.png", "sizes": "1024x1024", "type": "image/png" },
+    { "src": "/images/dash-128.png", "sizes": "1024x1024", "type": "image/png" },
+    { "src": "/images/dash-64.png", "sizes": "1024x1024", "type": "image/png" }
+    ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#555555"
+}

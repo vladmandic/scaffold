@@ -1,0 +1,8 @@
+{
+  "httpPort": 8000,
+  "httpsPort": 9000,
+  "logFile": "app.log",
+  "httpsForce": true,
+  "sslKey": "../cert/privkey.pem",
+  "sslCrt": "../cert/fullchain.pem"
+}

@@ -1,0 +1,99 @@
+{
+    "name": "scaffold",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Scaffold",
+    "main": "server/server.js",
+    "author": "mandic00@live.com",
+    "license": "ISC",
+    "scripts": {
+        "start": "node server/app.js",
+        "eslint": "./node_modules/.bin/eslint public/*.js public/*.html server/* *.json",
+        "upgrade": "./node_modules/.bin/ncu --greatest --upgrade && npm i --prod && npm i --dev && npm i --opt --force",
+        "audit": "npm audit"
+    },
+    "eslintIgnore": [
+        "scripts/*",
+        "node_modules/*"
+    ],
+    "eslintConfig": {
+        "env": {
+            "browser": true,
+            "commonjs": true,
+            "es6": true,
+            "node": true,
+            "jquery": true,
+            "es2020": true
+        },
+        "plugins": [
+            "html"
+        ],
+        "extends": [
+            "airbnb-base",
+            "plugin:json/recommended"
+        ],
+        "globals": {
+            "Atomics": "readonly",
+            "SharedArrayBuffer": "readonly",
+            "gapi": "readonly",
+            "superagent": "readonly",
+            "moment": "readonly",
+            "time_is_widget": "readonly"
+        },
+        "parserOptions": {
+            "ecmaVersion": 2020
+        },
+        "rules": {
+            "max-len": [
+                1,
+                210,
+                3
+            ],
+            "no-restricted-globals": 0,
+            "import/extensions": 0,
+            "no-await-in-loop": 0,
+            "no-restricted-syntax": "off",
+            "object-curly-newline": "off",
+            "camelcase": "off",
+            "no-loop-func": "off",
+            "no-mixed-operators": "off",
+            "prefer-destructuring": "off",
+            "no-bitwise": "off",
+            "no-underscore-dangle": "off",
+            "guard-for-in": "off",
+            "no-plusplus": "off"
+        },
+        "overrides": [
+            {
+                "files": [
+                    "*.html"
+                ],
+                "rules": {
+                    "no-unused-vars": "off",
+                    "no-undef": "off",
+                    "no-useless-concat": "off"
+                }
+            }
+        ]
+    },
+    "dependencies": {
+        "chalk": "^4.0.0",
+        "compression": "^1.7.4",
+        "express": "^5.0.0-alpha.8",
+        "helmet": "^3.22.0",
+        "helmet-csp": "^2.10.0",
+        "moment": "^2.24.0",
+        "superagent": "^5.2.2",
+        "useragent": "^2.3.0"
+    },
+    "devDependencies": {
+        "eslint": "^7.0.0-alpha.3",
+        "eslint-config-airbnb-base": "^14.1.0",
+        "eslint-plugin-html": "^6.0.0",
+        "eslint-plugin-import": "^2.20.2",
+        "eslint-plugin-json": "^2.1.1"
+    },
+    "optionalDependencies": {
+        "npm-check-updates": "^4.1.1"
+    }
+}
