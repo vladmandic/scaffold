@@ -25,9 +25,10 @@ const build = require('./build.js');
 // openssl req -x509 -newkey rsa:4096 -nodes -keyout https.key -out https.crt -days 365 -subj "/C=US/ST=Florida/L=Miami/O=@vladmandic"
 // client app does not work without secure server since browsers enforce https for webcam access
 const options = {
-  key: fs.readFileSync('server/https.key'),
-  cert: fs.readFileSync('server/https.crt'),
-  root: '../public',
+  key: fs.readFileSync(path.join(__dirname, 'https.key')),
+  cert: fs.readFileSync(path.join(__dirname, 'https.crt')),
+  root: '..',
+  public: 'public',
   default: 'index.html',
   httpPort: 8000,
   httpsPort: 8001,
@@ -76,6 +77,10 @@ async function watch() {
 // get file content for a valid url request
 function handle(url) {
   return new Promise((resolve) => {
+    if (!url.startsWith(path.join(__dirname, options.root))) {
+      log.warn(`Request outside of project root: ${url}`);
+      resolve(null);
+    }
     let obj = { ok: false };
     if (fs.existsSync(url)) obj.file = url;
     if (!obj.file) resolve(null);
@@ -92,7 +97,7 @@ function handle(url) {
 
 // process http requests
 async function httpRequest(req, res) {
-  handle(path.join(__dirname, options.root, req.url))
+  handle(path.join(__dirname, options.root, options.public, req.url))
     .then((result) => {
       // get original ip of requestor, regardless if it's behind proxy or not
       // eslint-disable-next-line dot-notation

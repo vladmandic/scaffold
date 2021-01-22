@@ -10,8 +10,8 @@
     "node": ">=14.0.0"
   },
   "scripts": {
-    "start": "node --trace-warnings server/dev.js",
-    "dev": "node --trace-warnings server/dev.js",
+    "start": "node --trace-warnings server/serve.js",
+    "dev": "node --trace-warnings server/serve.js",
     "build": "node --trace-warnings server/build.js",
     "lint": "eslint src/**/* server/*.js"
   },
