@@ -1,0 +1,37 @@
+{
+  "inputs": {
+    "src/log.ts": {
+      "bytes": 379,
+      "imports": []
+    },
+    "src/index.ts": {
+      "bytes": 93,
+      "imports": [
+        {
+          "path": "src/log.ts",
+          "kind": "import-statement"
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "public/index.js.map": {
+      "imports": [],
+      "inputs": {},
+      "bytes": 870
+    },
+    "public/index.js": {
+      "imports": [],
+      "exports": [],
+      "inputs": {
+        "src/log.ts": {
+          "bytesInOutput": 258
+        },
+        "src/index.ts": {
+          "bytesInOutput": 48
+        }
+      },
+      "bytes": 460
+    }
+  }
+}

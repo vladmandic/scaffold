@@ -1,0 +1,44 @@
+{
+  "globals": {},
+  "env": {
+      "browser": true,
+      "commonjs": true,
+      "es6": true,
+      "node": true,
+      "es2020": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": { "ecmaVersion": 2020 },
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:node/recommended",
+    "plugin:promise/recommended",
+    "plugin:json/recommended-with-comments",
+    "airbnb-base"
+  ],
+  "ignorePatterns": [ "node_modules", "types" ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
+    }
+  },
+  "rules": {
+    "max-len": [1, 275, 3],
+    "no-await-in-loop": "off",
+    "no-continue": "off",
+    "no-mixed-operators": "off",
+    "no-plusplus": "off",
+    "no-restricted-syntax": "off",
+    "prefer-destructuring": "off",
+    "radix": "off",
+    "import/extensions": "off",
+    "node/no-missing-import": "off",
+    "node/no-unsupported-features/es-syntax": "off"
+  }
+}

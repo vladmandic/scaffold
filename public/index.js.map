@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/log.ts", "../src/index.ts"],
+  "sourcesContent": ["async function log(...msg) {\n  if (!msg) return;\n  const dt = new Date();\n  const ts = `${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}:${dt.getSeconds().toString().padStart(2, '0')}.${dt.getMilliseconds().toString().padStart(3, '0')}`;\n  // eslint-disable-next-line no-console\n  console.log(ts, ...msg);\n}\n\nexport { log as default };\n", "import log from './log';\n\nasync function main() {\n  log(navigator);\n}\n\nwindow.onload = main;\n"],
+  "mappings": ";;;;;;;AAAA,oBAAsB,GACpB,GAAI,CAAC,EAAK,OACV,GAAM,GAAK,GAAI,MACT,EAAK,GAAG,EAAG,WAAW,WAAW,SAAS,EAAG,QAAQ,EAAG,aAAa,WAAW,SAAS,EAAG,QAAQ,EAAG,aAAa,WAAW,SAAS,EAAG,QAAQ,EAAG,kBAAkB,WAAW,SAAS,EAAG,OAErM,QAAQ,IAAI,EAAI,GAAG,GCHrB,mBACE,EAAI,WAGN,OAAO,OAAS",
+  "names": []
+}
