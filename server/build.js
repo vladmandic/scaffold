@@ -90,7 +90,7 @@ async function getStats(metafile) {
 }
 
 function compile(fileNames, options) {
-  log.info('Compile:', fileNames);
+  log.info('Compile typings:', fileNames);
   const program = ts.createProgram(fileNames, options);
   const emit = program.emit();
   const diag = ts

@@ -7,7 +7,6 @@
   - passthrough data compression
 */
 
-const process = require('process');
 const fs = require('fs');
 const zlib = require('zlib');
 const http = require('http');
@@ -23,7 +22,7 @@ const build = require('./build.js');
 // you can provide your server key and certificate or use provided self-signed ones
 // self-signed certificate generated using:
 // openssl req -x509 -newkey rsa:4096 -nodes -keyout https.key -out https.crt -days 365 -subj "/C=US/ST=Florida/L=Miami/O=@vladmandic"
-// client app does not work without secure server since browsers enforce https for webcam access
+// some client app do not work without secure server since browsers enforce https for items like access to webcam or navigator object
 const options = {
   key: fs.readFileSync(path.join(__dirname, 'https.key')),
   cert: fs.readFileSync(path.join(__dirname, 'https.crt')),
@@ -32,15 +31,17 @@ const options = {
   default: 'index.html',
   httpPort: 8000,
   httpsPort: 8001,
+  insecureHTTPParser: false,
+  minElapsed: 2,
   monitor: ['package.json', 'src'],
 };
 
 // just some predefined mime types
 const mime = {
-  '.html': 'text/html',
-  '.js': 'text/javascript',
-  '.css': 'text/css',
-  '.json': 'application/json',
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
   '.jpg': 'image/jpg',
   '.gif': 'image/gif',
@@ -48,10 +49,20 @@ const mime = {
   '.svg': 'image/svg+xml',
   '.wav': 'audio/wav',
   '.mp4': 'video/mp4',
-  '.woff': 'application/font-woff',
-  '.ttf': 'application/font-ttf',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
   '.wasm': 'application/wasm',
 };
+
+// checks for multiple events triggering within minElapsed and merge get into single event
+let last = Date.now();
+async function buildAll(evt, msg) {
+  const now = Date.now();
+  if ((now - last) > options.minElapsed) build.build(evt, msg);
+  else log.state('Build: merge event file', msg, evt);
+  last = now;
+}
 
 // watch filesystem for any changes and notify build when needed
 async function watch() {
@@ -67,9 +78,9 @@ async function watch() {
   });
   // single event handler for file add/change/delete
   watcher
-    .on('add', (evt) => build.build(evt, 'add'))
-    .on('change', (evt) => build.build(evt, 'modify'))
-    .on('unlink', (evt) => build.build(evt, 'remove'))
+    .on('add', (evt) => buildAll(evt, 'add'))
+    .on('change', (evt) => buildAll(evt, 'modify'))
+    .on('unlink', (evt) => buildAll(evt, 'remove'))
     .on('error', (err) => log.error(`Client watcher error: ${err}`))
     .on('ready', () => log.state('Monitoring:', options.monitor));
 }
@@ -113,7 +124,7 @@ async function httpRequest(req, res) {
         const accept = req.headers['accept-encoding'] ? req.headers['accept-encoding'].includes('br') : false; // does target accept brotli compressed data
         res.writeHead(200, {
           // 'Content-Length': result.stat.size, // not using as it's misleading for compressed streams
-          'Content-Language': 'en', 'Content-Type': contentType, 'Content-Encoding': accept ? 'br' : '', 'Last-Modified': result.stat.mtime, 'Cache-Control': 'no-cache', 'X-Powered-By': `NodeJS/${process.version}`,
+          'Content-Language': 'en', 'Content-Type': contentType, 'Content-Encoding': accept ? 'br' : '', 'Last-Modified': result.stat.mtime, 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff',
         });
         const compress = zlib.createBrotliCompress({ params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 5 } }); // instance of brotli compression with level 5
         const stream = fs.createReadStream(result.file);
@@ -140,13 +151,16 @@ async function httpRequest(req, res) {
 async function main() {
   log.header();
   await watch();
-  // @ts-ignore
-  const server1 = http.createServer(options, httpRequest);
-  server1.on('listening', () => log.state('HTTP server listening:', options.httpPort));
-  server1.listen(options.httpPort);
-  const server2 = http2.createSecureServer(options, httpRequest);
-  server2.on('listening', () => log.state('HTTP2 server listening:', options.httpsPort));
-  server2.listen(options.httpsPort);
+  if (options.httpPort && options.httpPort > 0) {
+    const server1 = http.createServer(options, httpRequest);
+    server1.on('listening', () => log.state('HTTP server listening:', options.httpPort));
+    server1.listen(options.httpPort);
+  }
+  if (options.httpsPort && options.httpsPort > 0) {
+    const server2 = http2.createSecureServer(options, httpRequest);
+    server2.on('listening', () => log.state('HTTP2 server listening:', options.httpsPort));
+    server2.listen(options.httpsPort);
+  }
   await build.build('all', 'startup');
 }
 
